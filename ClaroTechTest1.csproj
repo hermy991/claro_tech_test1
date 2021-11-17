@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile" Condition="'$(UseRoslynAnalyzers)' == 'false'"> 
+    <!-- 
+       Disable analyzers via an MSBuild property settable on the command line. 
+    --> 
+    <ItemGroup> 
+      <Analyzer Remove="@(Analyzer)" /> 
+    </ItemGroup> 
+  </Target> 
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Authors>Hermy García</Authors>
+    <Company>Me</Company>
+    <Product>ClaroTechTest1</Product>
+    <Description>Prueba técnica - Equipo de Tienda Claro Dominicana</Description>
+    <Copyright>Me</Copyright>
+    <NeutralLanguage>es-DO</NeutralLanguage>
+    <PackageIcon></PackageIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.12" />
+  </ItemGroup>
+</Project>
