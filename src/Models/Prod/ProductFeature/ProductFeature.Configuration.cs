@@ -19,6 +19,10 @@ namespace ClaroTechTest1.Models.Prod {
           .WithMany()
           .HasForeignKey(x => x.Product_ID);
           
+        opt.HasOne(x => x.Merchandise)
+          .WithMany()
+          .HasForeignKey(x => x.Merchandise_ID);
+          
         opt.HasOne(x => x.Feature)
           .WithMany()
           .HasForeignKey(x => x.Feature_ID);
@@ -29,7 +33,7 @@ namespace ClaroTechTest1.Models.Prod {
         #endregion
 
         #region Constraints
-        opt.HasIndex(x => new { x.Merchandice_ID, x.Feature_ID })
+        opt.HasIndex(x => new { x.Merchandise_ID, x.Feature_ID, x.FeatureDetail_ID })
           .HasDatabaseName("UQ_ProductFeature")
           .IsUnique();
         #endregion

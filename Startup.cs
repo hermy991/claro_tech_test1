@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 
 // using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 // using ReceivableSecurity.Services;
-// using ResiSecurity.Models;
+using ClaroTechTest1.Models;
 // using ResiSecurity.Services;
 
 namespace ClaroTechTest1
@@ -48,13 +48,8 @@ namespace ClaroTechTest1
         
             string sqlConnection = Configuration["Data:ConnectionString"];
             string serverVersion = Configuration["Data:ServerVersion"];
-            // services.AddDbContextPool<ResiDbContext>(options => options
-            //     // replace with your connection string
-            //     .UseMySql(sqlConnection, new MySqlServerVersion(new Version(serverVersion)), mySqlOptions => mySqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend))
-            //     // Everything from this point on is optional but helps with debugging.
-            //     .EnableSensitiveDataLogging()
-            //     .EnableDetailedErrors()
-            // );
+            // Entity Framework
+            services.AddDbContext<XorDbContext>(options => options.UseSqlServer(sqlConnection));
             services.AddControllers();
             // services.AddTransient<IReportService, ReportService>();
             // services.AddTransient<IGuReportService, GuReportService>();

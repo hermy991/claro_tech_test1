@@ -15,19 +15,19 @@ namespace ClaroTechTest1.Models.Prod {
         BaseColumnConfiguration.Configure(opt);
 
         #region Relationships
-        opt.HasOne(x => x.Merchandice)
+        opt.HasOne(x => x.Merchandise)
           .WithMany()
-          .HasForeignKey(x => x.Merchandice_ID);
+          .HasForeignKey(x => x.Merchandise_ID);
         #endregion
 
         #region Constraints
-        opt.HasIndex(x => new { x.Merchandice_ID, x.ProductCode })
+        opt.HasIndex(x => new { x.Merchandise_ID, x.ProductCode })
           .HasDatabaseName("UQ_Product")
           .IsUnique();
 
         opt.HasCheckConstraint("CHK_ProductCode", "[ProductCode] <> ''");
 
-        opt.HasCheckConstraint("CHK_Product_Tax", "[Total] >= 0");
+        opt.HasCheckConstraint("CHK_Product_Tax", "[Tax] >= 0");
 
         opt.HasCheckConstraint("CHK_Product_TotalPrice", "[TotalPrice] > 0");
         #endregion

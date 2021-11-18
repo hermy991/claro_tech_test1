@@ -20,9 +20,21 @@ namespace ClaroTechTest1.Models.Inv {
         opt.HasOne(x => x.Warehouse)
           .WithMany()
           .HasForeignKey(x => x.Warehouse_ID);
+          
+        opt.HasOne(x => x.Product)
+          .WithMany()
+          .HasForeignKey(x => x.Product_ID);
+          
+        opt.HasOne(x => x.InventoryStatus)
+          .WithMany()
+          .HasForeignKey(x => x.InventoryStatus_ID);
         #endregion
 
         #region Constraints
+        opt.HasIndex(x => new { x.Warehouse_ID, x.InventorySequence })
+          .HasDatabaseName("UQ_InventorySequence")
+          .IsUnique();
+
         opt.HasCheckConstraint("CHK_Inventory_Direction", "[Direction] IN ( 'E', 'S' )");
         #endregion
       });

@@ -20,6 +20,7 @@ namespace ClaroTechTest1.Models.Inv {
         opt.HasIndex(x => new {x.InventoryStatusDisplay })
           .HasDatabaseName("UQ_InventoryStatus")
           .IsUnique();
+          
         opt.HasCheckConstraint("CHK_InventoryStatusDisplay", "[InventoryStatusDisplay] <> ''");
         #endregion
         
