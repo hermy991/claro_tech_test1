@@ -12,14 +12,17 @@ nav.navbar {
 }
 .app-body {
   min-height: calc(100vh - var(--header-height));
+  display: flex;
 }
 .app-menu {
   width: var(--menu-width);
   min-height: calc(100vh - var(--header-height));
   padding: 12px;
-  background-color: #fafafa;
+  background-color: #ffffff;
 }
 
 .app-playground {
   width: calc( 100vw - var(--menu-width) );
+  min-height: calc(100vh - var(--header-height));
+  padding: 12px;
 }

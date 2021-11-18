@@ -16,9 +16,16 @@ namespace ClaroTechTest1.Models.Prod {
         
         BaseColumnConfiguration.Configure(opt);
 
+        opt.HasIndex(x => new { x.FeatureCode })
+          .HasDatabaseName("UQ_FeatureCode")
+          .IsUnique();
+
         opt.HasIndex(x => new { x.FeatureDisplay })
           .HasDatabaseName("UQ_FeatureDisplay")
           .IsUnique();
+
+        opt.HasCheckConstraint("CHK_FeatureCode", "[FeatureCode] > 0");
+
         opt.HasCheckConstraint("CHK_FeatureDisplay", "[FeatureDisplay] <> ''");
       });
     }

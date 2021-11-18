@@ -1,60 +1,44 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export class NavBar extends React.Component {
   render() {
-    return (<nav class="navbar is-info" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="https://bulma.io">
-        <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"></img>
-      </a>
+    return (<nav className="navbar is-info" role="navigation" aria-label="main navigation">
+    <div className="navbar-brand">
+      <Link className="navbar-item" to="/">
+        <img src="hermy-logo.png" alt="Hermy logo" width="112" height="28"></img>
+      </Link>
   
-      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <Link role="button" to="#" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
-      </a>
+      </Link>
     </div>
   
-    <div id="navbarBasicExample" class="navbar-menu">
-      <div class="navbar-start">
-        <a class="navbar-item">
-          Home
-        </a>
-  
-        <a class="navbar-item">
-          Documentation
-        </a>
-  
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">
-            More
-          </a>
-  
-          <div class="navbar-dropdown">
-            <a class="navbar-item">
-              About
-            </a>
-            <a class="navbar-item">
-              Jobs
-            </a>
-            <a class="navbar-item">
-              Contact
-            </a>
-            <hr class="navbar-divider"></hr>
-            <a class="navbar-item">
-              Report an issue
-            </a>
+    <div id="navbarBasicExample" className="navbar-menu">
+      <div className="navbar-start">
+        <Link className="navbar-item" to="/"> Home </Link>
+        <Link className="navbar-item" to="documentation/"> Documentación </Link>  
+        <div className="navbar-item has-dropdown is-hoverable">
+          <Link className="navbar-link" to="#"> Más </Link>  
+          <div className="navbar-dropdown">
+            <Link className="navbar-item" to="about/"> Acerca de </Link>
+            <Link className="navbar-item" to="work/"> Trabajo </Link>
+            <Link className="navbar-item" to="contact/"> Contacto </Link>
+            <hr className="navbar-divider"></hr>
+            <Link className="navbar-item" to="report-a-issue/"> Reportar un problema </Link>
           </div>
         </div>
       </div>
   
-      <div class="navbar-end">
-        <div class="navbar-item">
-          {/* <div class="buttons">
-            <a class="button is-primary">
+      <div className="navbar-end">
+        <div className="navbar-item">
+          {/* <div className="buttons">
+            <a className="button is-primary">
               <strong>Sign up</strong>
             </a>
-            <a class="button is-light">
+            <a className="button is-light">
               Log in
             </a>
           </div> */}

@@ -2,13 +2,19 @@
   "name": "tech-test1",
   "version": "0.1.0",
   "private": true,
+  "devServer": {
+    "disableHostCheck": true
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "bulma": "^0.9.3",
+    "font-awesome": "^4.7.0",
+    "http-proxy-middleware": "^0.19.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2"
   },
