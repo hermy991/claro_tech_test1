@@ -6,7 +6,7 @@ const options = {
   },
 }
 
-export async function getFeactures(body){
+export async function getFeatures(body){
   let toptions = JSON.parse(JSON.stringify(options));
   body = body || {};
   toptions.body = JSON.stringify(body);

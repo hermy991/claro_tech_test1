@@ -2,22 +2,28 @@ import React  from "react";
 import { Tabs } from "../../../Components/Tabs";
 import { Tab} from "../../../Components/Tab";
 import * as prod from "../../../Services/Prod"
+import {Form} from "./Form"
 
 const tabs = [
-  { title:"Listado de Caracteristicas", icon: "fa fa-list", active: false },
-  { title:"Registro de Caracteristica", icon: "fa fa-pencil-square-o", active: true },
+  { title:"Listado de Caracteristicas", icon: "fa fa-list", active: true },
+  { title:"Registro de Caracteristica", icon: "fa fa-pencil-square-o", active: false },
 ]
 
 export class PageProdCreateFeature extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = { tabs };
+    this.state = { tabs, features: [] };
   }
 
   componentDidMount = async () => {
-    let data = await prod.getFeactures();
-    console.log("data", data);
+    let j = await prod.getFeatures();
+    if(j.error){
+      console.log("j.error", j.error)
+    }
+    else {
+      this.setState({ features: j.data});
+    }
   }
 
   handlerSelectedTab = ({ title, e }) => {
@@ -41,11 +47,11 @@ export class PageProdCreateFeature extends React.Component {
             <th className="has-text-info-light"><abbr title="Nombre Caracteristica">Nombre Caracteristica</abbr></th>
           </tr>
         </thead>
-        <tbody>
-          <tr className="is-clickable">
-            <th>0001</th>
-            <td>Color</td>
-          </tr>
+        <tbody className="is-clickable"> {
+          this.state.features.map(x => 
+            <tr><th>{x.FeatureCode.toString().padStart(4, "0")}</th>
+            <td>{x.FeatureDisplay}</td></tr>
+          )}
         </tbody>
       </table>
     </div>
@@ -55,15 +61,12 @@ export class PageProdCreateFeature extends React.Component {
   render() {
     return (<div>
               <div className="box">
-                {/* <div className="tabs">
-                  <ul>
-                    <TabHeader title="Listado de Caracteristicas" icon="fa fa-list" active={true} />
-                    <TabHeader title="Registro de Caracteristica" icon="fa fa-pencil-square-o" />
-                  </ul>
-                </div>
-                {this.table()} */}
                 <Tabs handlerClick={this.handlerSelectedTab}>
-                  { this.state.tabs.map((x, i) => i === 0 ? <Tab key={i.toString()} {...x}>{this.table()}</Tab> : <Tab {...x}><p>Registro de Caracteristica</p></Tab>) }
+                  { this.state.tabs.map((x, i) => 
+                    i === 0 
+                      ? <Tab key={i.toString()} {...x}>{this.table()}</Tab> 
+                      : <Tab {...x}><Form /></Tab>
+                  )}
 
                 </Tabs>
               </div>

@@ -2,12 +2,9 @@ import React from "react"
 import { Link } from "react-router-dom"
 
 function TabHeader({title, active, icon, handlerClick}){
-  let handlerActiveClick = (e) => {
-    handlerClick({title, e});
-  }
   return (
    <li className={ active? "is-active": "" }>
-     <Link to="#" onClick={handlerActiveClick}>
+     <Link to="#" onClick={(e) => handlerClick({title, e})}>
        <span className="icon is-small"><i className={icon} aria-hidden="true"></i></span>
        <span>{title}</span>
      </Link>
@@ -20,9 +17,7 @@ export function TabContainer({active, children}){
 }
 
 export function Tabs(props){
-  // console.log("typeof props.children", typeof props.children)
   let childrens = Array.isArray(props.children) ? props.children : typeof props.children === "object" ? [props.children] : [];
-  // console.log("childrens", childrens)
   return (
     <>
     <div className="tabs">
