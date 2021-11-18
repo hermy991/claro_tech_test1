@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 // using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 // using ReceivableSecurity.Services;
 using ClaroTechTest1.Models;
-// using ResiSecurity.Services;
+using ClaroTechTest1.Services;
 
 namespace ClaroTechTest1
 {
@@ -51,10 +51,10 @@ namespace ClaroTechTest1
             // Entity Framework
             services.AddDbContext<XorDbContext>(options => options.UseSqlServer(sqlConnection));
             services.AddControllers();
+            services.AddTransient<IGeneralService, GeneralService>();
             // services.AddTransient<IReportService, ReportService>();
             // services.AddTransient<IGuReportService, GuReportService>();
             // services.AddTransient<IToolService, ToolService>();
-            // services.AddTransient<IDefaultService, DefaultService>();
             // services.AddTransient<ISecurityService, SecurityService>();
             // services.AddTransient<IResiService, ResiService>();
             // services.AddTransient<IReceivableService, ReceivableService>();
