@@ -1,7 +1,7 @@
 import React  from "react";
 import { Tabs } from "../../../Components/Tabs";
 import { Tab} from "../../../Components/Tab";
-// import * as prod from "../../../Services/Prod"
+import * as prod from "../../../Services/Prod"
 
 const tabs = [
   { title:"Listado de Caracteristicas", icon: "fa fa-list", active: false },
@@ -15,10 +15,10 @@ export class PageProdCreateFeature extends React.Component {
     this.state = { tabs };
   }
 
-  // componentDidMount = async () => {
-  //   let data = await prod.getFeactures();
-  //   console.log("data", data);
-  // }
+  componentDidMount = async () => {
+    let data = await prod.getFeactures();
+    console.log("data", data);
+  }
 
   handlerSelectedTab = ({ title, e }) => {
     // console.log("title", title, "e", e);
