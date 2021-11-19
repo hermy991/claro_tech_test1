@@ -26,3 +26,9 @@ nav.navbar {
   min-height: calc(100vh - var(--header-height));
   padding: 12px;
 }
+
+.app-body .app-right-input-button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}

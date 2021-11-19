@@ -6,7 +6,7 @@ export class NavBar extends React.Component {
     return (<nav className="navbar is-info" role="navigation" aria-label="main navigation">
     <div className="navbar-brand">
       <Link className="navbar-item" to="/">
-        <img src="hermy-logo.png" alt="Hermy logo" width="112" height="28"></img>
+        <img src="/hermy-logo.png" alt="Hermy logo" width="112" height="28"></img>
       </Link>
   
       <Link role="button" to="#" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">

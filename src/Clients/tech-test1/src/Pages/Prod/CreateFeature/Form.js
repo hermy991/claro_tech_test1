@@ -36,11 +36,32 @@ export function Form(props) {
 
         
         <div className="column">
-          <div className="field">
-            <label className="label is-small">Valor Característica</label>
-            <div className="control">
-              <input name="FeatureDetailDisplay" className="input is-small" type="text" maxLength="100" placeholder="Valor Característica" value={props.formDetail.FeatureDetailDisplay} onChange={props.handlerDetailChange} />
+          <div className="columns">
+            <div className="field column">
+              <label className="label is-small">Valor Característica</label>
+              <div className="control ">
+                <input name="FeatureDetailDisplay" className="input is-small" type="text" maxLength="100" placeholder="Valor Característica" value={props.formDetail.FeatureDetailDisplay} onChange={props.handlerDetailChange} />
+                
+                <div className="app-right-input-button">
+                  <button className="button is-info is-small">
+                    <span className="icon is-small">
+                      <i className="fa fa-plus"></i>
+                    </span>
+                  </button>
+                  <button className="button is-danger is-small">
+                    <span className="icon is-small">
+                      <i className="fa fa-minus"></i>
+                    </span>
+                  </button>
+                  <button className="button is-small">
+                    <span className="icon is-small">
+                      <i className="fa fa-eraser"></i>
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
+            
           </div>
           <TableDetail></TableDetail>
         </div>
