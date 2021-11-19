@@ -45,9 +45,9 @@ namespace ClaroTechTest1.Internal {
         // else if (ps[k] is string && new Regex("[0-9]{4}-[0-1][0-9]-[0-3][0-9]").IsMatch(ps[k]+""))
         //   tempv = "'"+ps[k]+"%'";
         else if (ps[k] is JsonElement && ((JsonElement) ps[k]).ValueKind == JsonValueKind.True)
-          tempv = "TRUE";
+          tempv = "'1'";
         else if (ps[k] is JsonElement && ((JsonElement) ps[k]).ValueKind == JsonValueKind.False)
-          tempv = "FALSE";
+          tempv = "'0'";
         else
           tempv = $"'{Regex.Replace(ps[k]+"", "'", "''")}'";
         var tempk = Regex.Replace(k, "[@:]", "");

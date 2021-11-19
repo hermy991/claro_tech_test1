@@ -20,8 +20,8 @@ export async function getFeatures(body){
   return json;
 }
 
-export async function getFeactureDetails(body){
-  const json = await post(`/entities/FeactureDetail`, body);
+export async function getFeatureDetails(body){
+  const json = await post(`/entities/FeatureDetail`, body);
   return json;
 }
 

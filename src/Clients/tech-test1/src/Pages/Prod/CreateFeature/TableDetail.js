@@ -11,8 +11,8 @@ export function TableDetail(props) {
           </tr>
         </thead>
         <tbody className="is-clickable"> {
-          (props.featureDetails || []).map((x , i) => 
-            <tr>
+          (props.details || []).map((x , i) => 
+            <tr onClick={() => props.handlerSelectDetail(i)}>
               <th>{x.FeatureDetail_ID}</th>
               <td>{x.FeatureDetailDisplay}</td>
             </tr>

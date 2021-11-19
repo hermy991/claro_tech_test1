@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
+using Z.EntityFramework.Plus;
 
 using ClaroTechTest1.Models;
 using ClaroTechTest1.Models.Prod;
@@ -10,16 +11,18 @@ using ClaroTechTest1.Internal;
 
 namespace ClaroTechTest1.Services {
   public interface IProdService {
-    Return CreateFeature(Dictionary<string, object> feature);
-    Return CreateMerchandise(Dictionary<string, object> merchandise);
+    Return CreateFeature(XorDbContext _db, Dictionary<string, object> feature);
+    Return CreateMerchandise(XorDbContext _db, Dictionary<string, object> merchandise);
+    Return SetFeatureDetails(XorDbContext _db, int Feature_ID, FeatureDetail[] featureDetails);
   }
 
   public class ProdService : IProdService {
     public ProdService(XorDbContext db){
-      this._db = db;
+      this.__db = db;
     }
-    private XorDbContext _db;
-    public Return CreateFeature(Dictionary<string, object> feature){
+    private XorDbContext __db;
+    public Return CreateFeature(XorDbContext _db, Dictionary<string, object> feature){
+      _db = _db ?? __db;
       var message = "";
       try{
         int? feature_ID = feature.ContainsKey("Feature_ID") ? Convert.ToInt32(feature["Feature_ID"]) : null;
@@ -51,7 +54,8 @@ namespace ClaroTechTest1.Services {
       }
     }
     
-    public Return CreateMerchandise(Dictionary<string, object> merchandise){
+    public Return CreateMerchandise(XorDbContext _db, Dictionary<string, object> merchandise){
+      _db = _db ?? __db;
       var message = "";
       try{
         int? Merchandise_ID = merchandise.ContainsKey("Merchandise_ID") ? Convert.ToInt32(merchandise["Merchandise_ID"]) : null;
@@ -79,6 +83,58 @@ namespace ClaroTechTest1.Services {
         return new Return(message).SetData(fx);
       } catch (Exception ex) {
         return new Return(new { Message = $"Error registrando mercancía", ExMessage = ex.Message });
+      }
+    }
+    
+    public Return SetFeatureDetails(XorDbContext _db, int Feature_ID, FeatureDetail[] FeatureDetails){
+      _db = _db ?? __db;
+      try{
+        string[] featureDetailDisplays = FeatureDetails.Select(x => x.FeatureDetailDisplay).ToArray();
+
+        var existingFeatureDetails = _db.FeatureDetails.Where(x => x.Feature_ID == Feature_ID)
+                          .Select(x => x.FeatureDetailDisplay.ToUpper().Trim())
+                          .ToArray();
+        /**
+        * Desactivamos todas las puertas activas */
+        _db.FeatureDetails
+            .Where(x=> x.Feature_ID == Feature_ID
+                      && x.Active == true
+                    )
+            .Update(x=> new FeatureDetail() { Active = false, ModifiedBy_ID = 1 });
+        /**
+        * Activamos y actualizamos todas las puertas por el parametro Doors que se encuentran guardatas*/
+
+        for (int i = 0; i < FeatureDetails.Length; i++)
+        {
+          FeatureDetail dt = _db.FeatureDetails.FirstOrDefault(x =>
+            x.Feature_ID == Feature_ID && x.FeatureDetailDisplay == FeatureDetails[i].FeatureDetailDisplay);
+          if (dt != null)
+          {
+            dt.FeatureDetailDisplay = FeatureDetails[i].FeatureDetailDisplay;
+            dt.Active = true;
+          }
+        }
+        /**
+        * Insertaremos todas las puertas por el parametro Doors que no se encuentren guardatas*/
+
+        FeatureDetail[] doorsToInsert = FeatureDetails.Where(x=> !existingFeatureDetails.Contains(x.FeatureDetailDisplay.ToUpper().Trim())).ToArray();
+
+        for(int i=0; i<doorsToInsert.Length; i++){
+          var temp = new FeatureDetail(){
+            Feature_ID = Feature_ID,
+            FeatureDetailDisplay = doorsToInsert[i].FeatureDetailDisplay, 
+            CreatedBy_ID = 1,
+            Active = true,
+          };
+          _db.FeatureDetails.Add(temp);
+        }
+          
+        _db.SaveChanges();
+        String message = "Valores caracteristica registradas exitosamente";
+        return new Return(message).SetData(doorsToInsert);
+      }
+      catch (Exception ex){
+        return new Return( new { Message = $"Error registrando caracteristica valores", ExMessage = ex.Message });
       }
     }
   }

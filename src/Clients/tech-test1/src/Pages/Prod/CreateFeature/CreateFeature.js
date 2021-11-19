@@ -24,7 +24,7 @@ export class PageProdCreateFeature extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = { tabs, form: formNew, formDetail: formDetailNew, features: [] };
+    this.state = { tabs, form: formNew, detailIndex: -1, formDetail: formDetailNew, features: [], featureDetails: [] };
   }
 
   componentDidMount = async () => {
@@ -38,6 +38,16 @@ export class PageProdCreateFeature extends React.Component {
     }
     else {
       this.setState({ features: j.data});
+    }
+  }
+
+  findFeatureDetails = async (Feature_ID) => {
+    let j = await prod.getFeatureDetails({ Feature_ID, Active: true });
+    if(j.error){
+      console.log("j.error", j.error)
+    }
+    else {
+      this.setState({ featureDetails: j.data});
     }
   }
 
@@ -93,8 +103,47 @@ export class PageProdCreateFeature extends React.Component {
     this.setState({ formDetail: { ...this.state.formDetail, [name]: value } });
   }
 
+  handlerSelectFeature = async (form) => {
+    this.setState({ form });
+    this.handlerSelectedTab({title: this.state.tabs[1].title});
+    await this.findFeatureDetails(form.Feature_ID);
+  }
+
+  handlerFeatureDetailButtons = (operation /* +,-,/ */, index, featureDetail) => {
+    if(!featureDetail.FeatureDetailDisplay) {
+      return;
+    }
+    let { featureDetails } = this.state; 
+    featureDetails.forEach((x, i) => {
+      if(x.FeatureDetailDisplay.trim().toUpperCase() === featureDetail.FeatureDetailDisplay.trim().toUpperCase())
+        index = i;
+    })
+    if(operation === "+" && index >= 0 && featureDetails.length > index){
+      featureDetails[index] = { ...featureDetails[index], ...featureDetail }
+      this.setState({ featureDetails: featureDetails, detailIndex: -1, formDetail: formDetailNew })
+    }
+    else if(operation === "+" && index === -1){
+      featureDetails.push(featureDetail);
+      this.setState({ featureDetails: featureDetails, detailIndex: -1, formDetail: formDetailNew })
+    }
+    else if(operation === "-" && index >= 0 && featureDetails.length > index){
+      console.log({operation /* +,-,/ */, index, featureDetail})
+      delete featureDetails[index];
+      this.setState({ featureDetails: featureDetails, detailIndex: -1, formDetail: formDetailNew })
+    }
+    else if(operation === "/"){
+      this.setState({ detailIndex: -1, formDetail: formDetailNew })
+    }
+  }
+
+  handlerSelectFeatureDetail = (selectedIndex) => {
+    this.setState({ detailIndex: selectedIndex, formDetail: this.state.featureDetails[selectedIndex] })
+  }
+
   handlerSave = async () => {
-    let j = await prod.saveFeature(this.state.form);
+    let tform = JSON.parse(JSON.stringify(this.state.form));
+    tform.FeatureDetails = JSON.parse(JSON.stringify(this.state.featureDetails.filter(x => x)));
+    let j = await prod.saveFeature(tform);
     if(j.error){
       console.log("j.error", j.error);
     }
@@ -106,12 +155,7 @@ export class PageProdCreateFeature extends React.Component {
   }
 
   handlerNew = () => {
-    this.setState({ form: formNew, formDetail: formDetailNew});
-  }
-
-  handlerSelectFeature(form){
-    this.setState({ form });
-    this.handlerSelectedTab({title: this.state.tabs[1].title});
+    this.setState({ form: formNew, detailIndex: -1, formDetail: formDetailNew, featureDestails: []});
   }
 
   render() {
@@ -121,9 +165,12 @@ export class PageProdCreateFeature extends React.Component {
                   { this.state.tabs.map((x, i) => 
                     i === 0 
                       ? <Tab key={i.toString()} {...x}>{this.table()}</Tab> 
-                      : <Tab {...x}><Form form={this.state.form} handlerChange={this.handlerChange} 
-                                          formDetail={this.state.formDetail} handlerDetailChange={this.handlerDetailChange} 
-                                          handlerSave={this.handlerSave} handlerNew={this.handlerNew} /></Tab>
+                      : <Tab {...x}>
+                          <Form form={this.state.form} handlerChange={this.handlerChange} 
+                                      detailIndex={this.state.detailIndex} formDetail={this.state.formDetail} details={this.state.featureDetails }
+                                      handlerDetailChange={this.handlerDetailChange} handlerSelectDetail={this.handlerSelectFeatureDetail} handlerDetailButtons={this.handlerFeatureDetailButtons} 
+                                      handlerSave={this.handlerSave} handlerNew={this.handlerNew} />
+                        </Tab>
                   )}
 
                 </Tabs>

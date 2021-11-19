@@ -43,17 +43,19 @@ export function Form(props) {
                 <input name="FeatureDetailDisplay" className="input is-small" type="text" maxLength="100" placeholder="Valor Característica" value={props.formDetail.FeatureDetailDisplay} onChange={props.handlerDetailChange} />
                 
                 <div className="app-right-input-button">
-                  <button className="button is-info is-small">
+                  <button className="button is-info is-small"
+                          // onKeyUp={(e) => e.charCode === 13 ? props.handlerDetailButtons("+", props.detailIndex, props.formDetail) : undefined } 
+                          onClick={() => props.handlerDetailButtons("+", props.detailIndex, props.formDetail)}>
                     <span className="icon is-small">
                       <i className="fa fa-plus"></i>
                     </span>
                   </button>
-                  <button className="button is-danger is-small">
+                  <button className="button is-danger is-small" onClick={() => props.handlerDetailButtons("-", props.detailIndex, props.formDetail)}>
                     <span className="icon is-small">
                       <i className="fa fa-minus"></i>
                     </span>
                   </button>
-                  <button className="button is-small">
+                  <button className="button is-small" onClick={() => props.handlerDetailButtons("/", props.detailIndex, props.formDetail)}>
                     <span className="icon is-small">
                       <i className="fa fa-eraser"></i>
                     </span>
@@ -63,7 +65,7 @@ export function Form(props) {
             </div>
             
           </div>
-          <TableDetail></TableDetail>
+          <TableDetail details={props.details} handlerSelectDetail={props.handlerSelectDetail}></TableDetail>
         </div>
       </div>
       <div className="app-control buttons">
