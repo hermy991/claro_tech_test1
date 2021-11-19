@@ -60,3 +60,12 @@ export async function getProductFeatures(body){
   const json = await r.json();
   return json;
 }
+
+export async function saveFeature(body){
+  let toptions = JSON.parse(JSON.stringify(options));
+  body = body || {};
+  toptions.body = JSON.stringify(body);
+  const r = await fetch(`${pathBase}/process/saveFeature`, toptions);
+  const json = await r.json();
+  return json;
+}

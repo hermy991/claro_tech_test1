@@ -9,14 +9,24 @@ const tabs = [
   { title:"Registro de Caracteristica", icon: "fa fa-pencil-square-o", active: false },
 ]
 
+const formNew = {
+  FeatureCode: "New",
+  FeatureDisplay: "",
+  Active: true
+}
+
 export class PageProdCreateFeature extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = { tabs, features: [] };
+    this.state = { tabs, form: formNew, features: [] };
   }
 
   componentDidMount = async () => {
+    await this.init();
+  }
+
+  init = async () => {
     let j = await prod.getFeatures();
     if(j.error){
       console.log("j.error", j.error)
@@ -45,17 +55,50 @@ export class PageProdCreateFeature extends React.Component {
           <tr className="has-background-info">
             <th className="has-text-info-light"><abbr title="Código Caracteristica">Código Caracteristica</abbr></th>
             <th className="has-text-info-light"><abbr title="Nombre Caracteristica">Nombre Caracteristica</abbr></th>
+            <th className="has-text-info-light"><abbr title="Estatus">Estatus</abbr></th>
           </tr>
         </thead>
         <tbody className="is-clickable"> {
           this.state.features.map(x => 
-            <tr><th>{x.FeatureCode.toString().padStart(4, "0")}</th>
-            <td>{x.FeatureDisplay}</td></tr>
+            <tr onClick={() => this.handlerSelectFeature(x)}>
+              <th>{x.FeatureCode.toString().padStart(4, "0")}</th>
+              <td>{x.FeatureDisplay}</td>
+              <td>{x.Active ? "Habilitado" : "Deshabilitado"}</td>
+            </tr>
           )}
         </tbody>
       </table>
     </div>
     );
+  }
+
+  handlerChange = (e) => {
+    const target = e.target;
+    let value = target.type === 'checkbox' ? target.checked : target.value;
+    value = value === "true" ? true : value === "false" ? false : value;
+    const name = target.name;
+    this.setState({ form: { ...this.state.form, [name]: value } });
+  }
+
+  handlerSave = async () => {
+    let j = await prod.saveFeature(this.state.form);
+    if(j.error){
+      console.log("j.error", j.error);
+    }
+    else {
+      await this.init();
+      this.handlerSelectedTab({title: this.state.tabs[0].title});
+      this.handlerNew();
+    }
+  }
+
+  handlerNew = () => {
+    this.setState({ form: formNew});
+  }
+
+  handlerSelectFeature(form){
+    this.setState({ form });
+    this.handlerSelectedTab({title: this.state.tabs[1].title});
   }
 
   render() {
@@ -65,7 +108,7 @@ export class PageProdCreateFeature extends React.Component {
                   { this.state.tabs.map((x, i) => 
                     i === 0 
                       ? <Tab key={i.toString()} {...x}>{this.table()}</Tab> 
-                      : <Tab {...x}><Form /></Tab>
+                      : <Tab {...x}><Form form={this.state.form} handlerChange={this.handlerChange} handlerSave={this.handlerSave} handlerNew={this.handlerNew} /></Tab>
                   )}
 
                 </Tabs>

@@ -7,16 +7,16 @@ export function Form(props) {
         <div className="column">
 
           <div className="field">
-            <label className="label is-small">Código Caracteristica</label>
+            <label className="label is-small">Código Mercancía</label>
             <div className="control">
-              <input name="FeatureCode" className="input is-small" type="text" placeholder="Código Caracteristica" disabled value={isNaN(props.form.FeatureCode) ? props.form.FeatureCode : props.form.FeatureCode.toString().padStart(4, '0') }/>
+              <input name="MerchandiseCode" className="input is-small" type="text" placeholder="Código Mercancía" disabled value={isNaN(props.form.MerchandiseCode) ? props.form.MerchandiseCode : props.form.MerchandiseCode.toString().padStart(4, '0') }/>
             </div>
           </div>
 
           <div className="field">
-            <label className="label is-small">Nombre Caracteristica</label>
+            <label className="label is-small">Nombre Mercancía</label>
             <div className="control">
-              <input name="FeatureDisplay" className="input is-small" type="text" maxLength="100" placeholder="Nombre Caracteristica" value={props.form.FeatureDisplay} onChange={props.handlerChange} />
+              <input name="MerchandiseDisplay" className="input is-small" type="text" maxLength="100" placeholder="Nombre Mercancía" value={props.form.MerchandiseDisplay} onChange={props.handlerChange} />
             </div>
           </div>
 

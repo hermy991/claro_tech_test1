@@ -55,7 +55,7 @@ namespace ClaroTechTest1
             // services.AddTransient<IReportService, ReportService>();
             // services.AddTransient<IGuReportService, GuReportService>();
             // services.AddTransient<IToolService, ToolService>();
-            // services.AddTransient<ISecurityService, SecurityService>();
+            services.AddTransient<IProdService, ProdService>();
             // services.AddTransient<IResiService, ResiService>();
             // services.AddTransient<IReceivableService, ReceivableService>();
 

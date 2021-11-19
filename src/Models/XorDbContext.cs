@@ -8,18 +8,18 @@ namespace ClaroTechTest1.Models {
      public XorDbContext(DbContextOptions options) : base(options){   }
 
     #region Inventory Entities
-      private DbSet<Inventory> Inventories { get; set; }
-      private DbSet<InventoryStatus> InventoryStatus { get; set; }
-      private DbSet<Warehouse> Warehouses { get; set; }
+      public DbSet<Inventory> Inventories { get; set; }
+      public DbSet<InventoryStatus> InventoryStatus { get; set; }
+      public DbSet<Warehouse> Warehouses { get; set; }
     #endregion
 
     #region Product Entities
-      private DbSet<Feature> Features { get; set; }
-      private DbSet<FeatureDetail> FeatureDetails { get; set; }
-      private DbSet<Merchandise> Merchandises { get; set; }
-      private DbSet<MerchandiseFeature> MerchandiseFeatures { get; set; }
-      private DbSet<Product> Products { get; set; }
-      private DbSet<ProductFeature> ProductFeatures { get; set; }
+      public DbSet<Feature> Features { get; set; }
+      public DbSet<FeatureDetail> FeatureDetails { get; set; }
+      public DbSet<Merchandise> Merchandises { get; set; }
+      public DbSet<MerchandiseFeature> MerchandiseFeatures { get; set; }
+      public DbSet<Product> Products { get; set; }
+      public DbSet<ProductFeature> ProductFeatures { get; set; }
     #endregion
     
     protected override void OnModelCreating(ModelBuilder mb) {
