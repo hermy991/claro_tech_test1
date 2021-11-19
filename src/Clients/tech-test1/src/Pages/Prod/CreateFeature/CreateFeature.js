@@ -15,11 +15,16 @@ const formNew = {
   Active: true
 }
 
+const formDetailNew = {
+  FeatureDetailDisplay: "",
+  Active: true
+}
+
 export class PageProdCreateFeature extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = { tabs, form: formNew, features: [] };
+    this.state = { tabs, form: formNew, formDetail: formDetailNew, features: [] };
   }
 
   componentDidMount = async () => {
@@ -80,6 +85,14 @@ export class PageProdCreateFeature extends React.Component {
     this.setState({ form: { ...this.state.form, [name]: value } });
   }
 
+  handlerDetailChange = (e) => {
+    const target = e.target;
+    let value = target.type === 'checkbox' ? target.checked : target.value;
+    value = value === "true" ? true : value === "false" ? false : value;
+    const name = target.name;
+    this.setState({ formDetail: { ...this.state.formDetail, [name]: value } });
+  }
+
   handlerSave = async () => {
     let j = await prod.saveFeature(this.state.form);
     if(j.error){
@@ -93,7 +106,7 @@ export class PageProdCreateFeature extends React.Component {
   }
 
   handlerNew = () => {
-    this.setState({ form: formNew});
+    this.setState({ form: formNew, formDetail: formDetailNew});
   }
 
   handlerSelectFeature(form){
@@ -108,7 +121,9 @@ export class PageProdCreateFeature extends React.Component {
                   { this.state.tabs.map((x, i) => 
                     i === 0 
                       ? <Tab key={i.toString()} {...x}>{this.table()}</Tab> 
-                      : <Tab {...x}><Form form={this.state.form} handlerChange={this.handlerChange} handlerSave={this.handlerSave} handlerNew={this.handlerNew} /></Tab>
+                      : <Tab {...x}><Form form={this.state.form} handlerChange={this.handlerChange} 
+                                          formDetail={this.state.formDetail} handlerDetailChange={this.handlerDetailChange} 
+                                          handlerSave={this.handlerSave} handlerNew={this.handlerNew} /></Tab>
                   )}
 
                 </Tabs>

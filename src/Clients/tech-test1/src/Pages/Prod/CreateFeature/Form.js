@@ -1,10 +1,11 @@
 import React from "react";
+import { TableDetail } from "./TableDetail";
 
 export function Form(props) {
   return (
     <div>
       <div className="app-row columns">
-        <div className="column">
+        <div className="column is-two-fifths">
 
           <div className="field">
             <label className="label is-small">Código Característica</label>
@@ -31,12 +32,18 @@ export function Form(props) {
               </div>
             </div>
           </div>
-
         </div>
 
         
-        <div className="column"></div>
-        <div className="column"></div>
+        <div className="column">
+          <div className="field">
+            <label className="label is-small">Valor Característica</label>
+            <div className="control">
+              <input name="FeatureDetailDisplay" className="input is-small" type="text" maxLength="100" placeholder="Valor Característica" value={props.formDetail.FeatureDetailDisplay} onChange={props.handlerDetailChange} />
+            </div>
+          </div>
+          <TableDetail></TableDetail>
+        </div>
       </div>
       <div className="app-control buttons">
         <button className="button is-info is-small" onClick={props.handlerSave}>Normal</button>

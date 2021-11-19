@@ -4,7 +4,7 @@ export function Form(props) {
   return (
     <div>
       <div className="app-row columns">
-        <div className="column">
+        <div className="column is-two-fifths">
 
           <div className="field">
             <label className="label is-small">Código Mercancía</label>
@@ -34,7 +34,6 @@ export function Form(props) {
         </div>
 
         
-        <div className="column"></div>
         <div className="column"></div>
       </div>
       <div className="app-control buttons">
