@@ -63,6 +63,7 @@ namespace ClaroTechTest1.Controllers {
     [Route("process/saveMerchandise")]
     public IActionResult saveMerchandise([FromBody] dynamic json){
       var merchandise = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+      merchandise["FeatureSelections"] = ((JArray)merchandise["FeatureSelections"]).ToObject<int[]>();
       Return r = new Return();
       using (var transaction = this._db.Database.BeginTransaction()){
         
@@ -70,6 +71,12 @@ namespace ClaroTechTest1.Controllers {
         if(cfr?.Error?.Message != null){
           transaction.Rollback();
           return Ok(cfr);
+        }
+        merchandise["Merchandise_ID"] = cfr.Data.Merchandise_ID;
+        var sbr = this._ps.SetFeatures(this._db, merchandise["Merchandise_ID"], merchandise["FeatureSelections"]);
+        if(sbr?.Error?.Message != null){
+          transaction.Rollback();
+          return Ok(sbr);
         }
         transaction.Commit();
         return Ok(r.SetSuccess("Característica registrada.").SetData(cfr));

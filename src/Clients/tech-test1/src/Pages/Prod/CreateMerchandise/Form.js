@@ -1,4 +1,5 @@
 import React from "react";
+import { TableDetail } from "./TableDetail"
 
 export function Form(props) {
   return (
@@ -32,9 +33,9 @@ export function Form(props) {
             </div>
           </div>
         </div>
-
-        
-        <div className="column"></div>
+        <div className="column">
+          <TableDetail details={props.details} handlerCheckChange={props.handlerCheckChange}></TableDetail>
+        </div>
       </div>
       <div className="app-control buttons">
         <button className="button is-info is-small" onClick={props.handlerSave}>Normal</button>

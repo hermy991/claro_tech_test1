@@ -14,15 +14,17 @@ const formNew = {
   MerchandiseDisplay: "",
   Active: true
 }
+
 export class PageProdCreateMerchandise extends React.Component {
   constructor(props) {
     super(props);
     
-    this.state = { tabs, form: formNew, merchandises: [] };
+    this.state = { tabs, form: formNew, merchandises: [], features: [] };
   }
 
   componentDidMount = async () => {
     await this.init();
+    await this.findFeatures();
   }
 
   init = async () => {
@@ -32,6 +34,29 @@ export class PageProdCreateMerchandise extends React.Component {
     }
     else {
       this.setState({ merchandises: j.data});
+    }
+  }
+
+  findFeatures = async () => {
+    let j = await prod.getFeatures();
+    if(j.error){
+      console.log("j.error", j.error)
+    }
+    else {
+      this.setState({ features: j.data});
+    }
+  }
+
+  findMerchandiseFeatures = async (Merchandise_ID) => {
+    let j = await prod.getMerchandiseFeatures({ Merchandise_ID, Active: true });
+    if(j.error){
+      console.log("j.error", j.error)
+    }
+    else {
+      let features = this.state.features;
+      let selecteds = j.data.map(x => x.Feature_ID);
+      features.forEach(x => x.Selected = selecteds.includes(x.Feature_ID));
+      this.setState({ features });
     }
   }
 
@@ -79,8 +104,16 @@ export class PageProdCreateMerchandise extends React.Component {
     this.setState({ form: { ...this.state.form, [name]: value } });
   }
 
+  handlerCheckChange = (index, o) => {
+    let features = this.state.features;
+    features[index] = { ...features[index], Selected: !o.Selected };
+    this.setState({ features });
+  }
+
   handlerSave = async () => {
-    let j = await prod.saveMerchandise(this.state.form);
+    let tform = JSON.parse(JSON.stringify(this.state.form));
+    tform.FeatureSelections = JSON.parse(JSON.stringify(this.state.features.filter(x => x.Selected).map(x => x.Feature_ID)));
+    let j = await prod.saveMerchandise(tform);
     if(j.error){
       console.log("j.error", j.error);
     }
@@ -92,12 +125,15 @@ export class PageProdCreateMerchandise extends React.Component {
   }
 
   handlerNew = () => {
-    this.setState({ form: formNew});
+    let features = this.state.features;
+    features.forEach(x => x.Selected = false);
+    this.setState({ form: formNew, features });
   }
 
-  handlerSelectMerchandise(form){
+  handlerSelectMerchandise = async (form) => {
     this.setState({ form });
     this.handlerSelectedTab({title: this.state.tabs[1].title});
+    await this.findMerchandiseFeatures(form.Merchandise_ID);
   }
 
   render() {
@@ -107,7 +143,11 @@ export class PageProdCreateMerchandise extends React.Component {
                   { this.state.tabs.map((x, i) => 
                     i === 0 
                       ? <Tab key={i.toString()} {...x}>{this.table()}</Tab> 
-                      : <Tab {...x}><Form form={this.state.form} handlerChange={this.handlerChange} handlerSave={this.handlerSave} handlerNew={this.handlerNew} /></Tab>
+                      : <Tab {...x}>
+                          <Form form={this.state.form} handlerChange={this.handlerChange} 
+                                      details={this.state.features } handlerCheckChange={this.handlerCheckChange}
+                                      handlerSave={this.handlerSave} handlerNew={this.handlerNew} />
+                        </Tab>
                   )}
 
                 </Tabs>

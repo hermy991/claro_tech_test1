@@ -11,9 +11,10 @@ using ClaroTechTest1.Internal;
 
 namespace ClaroTechTest1.Services {
   public interface IProdService {
-    Return CreateFeature(XorDbContext _db, Dictionary<string, object> feature);
-    Return CreateMerchandise(XorDbContext _db, Dictionary<string, object> merchandise);
-    Return SetFeatureDetails(XorDbContext _db, int Feature_ID, FeatureDetail[] featureDetails);
+    Return CreateFeature(XorDbContext _db, Dictionary<string, object> Feature);
+    Return CreateMerchandise(XorDbContext _db, Dictionary<string, object> Merchandise);
+    Return SetFeatureDetails(XorDbContext _db, int Feature_ID, FeatureDetail[] FeatureDetails);
+    Return SetFeatures(XorDbContext _db, int Merchandise_ID, int[] FeatureSelections);
   }
 
   public class ProdService : IProdService {
@@ -135,6 +136,43 @@ namespace ClaroTechTest1.Services {
       }
       catch (Exception ex){
         return new Return( new { Message = $"Error registrando caracteristica valores", ExMessage = ex.Message });
+      }
+    }
+
+    public Return SetFeatures(XorDbContext _db, int Merchandise_ID, int[] FeatureSelections){
+      _db = _db ?? __db;
+      var message = "";
+      try{
+        var existingFeatures = _db.MerchandiseFeatures.Where(x => x.Merchandise_ID == Merchandise_ID)
+                          .Select(x => x.Feature_ID)
+                          .ToArray();
+
+        _db.MerchandiseFeatures.Where(x=> x.Merchandise_ID == Merchandise_ID && x.Active == true)
+            .Update(x=>new MerchandiseFeature() { Active = false, ModifiedBy_ID = 1 });
+
+        _db.MerchandiseFeatures.Where(x=> x.Merchandise_ID == Merchandise_ID && x.Active == false && FeatureSelections.Contains(x.Feature_ID))
+            .Update(x=>new MerchandiseFeature() { Active = true, ModifiedBy_ID = 1 });
+
+        Feature[] featuresToInsert = _db.Features.Where(x=> FeatureSelections.Contains(x.Feature_ID)
+                                                           && !existingFeatures.Contains(x.Feature_ID) 
+                                                           && x.Active == true).ToArray();
+
+        for(int i=0; i<featuresToInsert.Length; i++){
+          var temp = new MerchandiseFeature(){
+            Merchandise_ID = Merchandise_ID,
+            Feature_ID = featuresToInsert[i].Feature_ID,
+            CreatedBy_ID = 1,
+            Active = true,
+          };
+          _db.MerchandiseFeatures.Add(temp);
+        }
+
+        _db.SaveChanges();
+        message = "Caracteristicas registrada exitosamente";
+        return new Return(message).SetData(featuresToInsert);
+      }
+      catch (Exception ex){
+        return new Return( new { Message = $"Error registrando caracteristicas", ExMessage = ex.Message });
       }
     }
   }
