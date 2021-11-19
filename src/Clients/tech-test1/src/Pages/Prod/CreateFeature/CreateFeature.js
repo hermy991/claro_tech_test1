@@ -5,8 +5,8 @@ import * as prod from "../../../Services/Prod"
 import {Form} from "./Form"
 
 const tabs = [
-  { title:"Listado de Caracteristicas", icon: "fa fa-list", active: true },
-  { title:"Registro de Caracteristica", icon: "fa fa-pencil-square-o", active: false },
+  { title:"Listado de Características", icon: "fa fa-list", active: true },
+  { title:"Registro de Característica", icon: "fa fa-pencil-square-o", active: false },
 ]
 
 const formNew = {
@@ -53,8 +53,8 @@ export class PageProdCreateFeature extends React.Component {
       <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
         <thead>
           <tr className="has-background-info">
-            <th className="has-text-info-light"><abbr title="Código Caracteristica">Código Caracteristica</abbr></th>
-            <th className="has-text-info-light"><abbr title="Nombre Caracteristica">Nombre Caracteristica</abbr></th>
+            <th className="has-text-info-light"><abbr title="Código Característica">Código Característica</abbr></th>
+            <th className="has-text-info-light"><abbr title="Nombre Característica">Nombre Característica</abbr></th>
             <th className="has-text-info-light"><abbr title="Estatus">Estatus</abbr></th>
           </tr>
         </thead>

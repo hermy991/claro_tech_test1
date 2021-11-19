@@ -10,7 +10,7 @@ const tabs = [
 ]
 
 const formNew = {
-  MerchandiseCode: "New",
+  MerchandiseCode: "",
   MerchandiseDisplay: "",
   Active: true
 }

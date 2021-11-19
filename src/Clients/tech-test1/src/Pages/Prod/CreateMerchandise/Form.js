@@ -9,7 +9,7 @@ export function Form(props) {
           <div className="field">
             <label className="label is-small">Código Mercancía</label>
             <div className="control">
-              <input name="MerchandiseCode" className="input is-small" type="text" placeholder="Código Mercancía" disabled value={isNaN(props.form.MerchandiseCode) ? props.form.MerchandiseCode : props.form.MerchandiseCode.toString().padStart(4, '0') }/>
+              <input name="MerchandiseCode" className="input is-small" type="text" maxLength="20" placeholder="Código Mercancía" value={props.form.MerchandiseCode.toUpperCase() } onChange={props.handlerChange}/>
             </div>
           </div>
 
@@ -31,7 +31,6 @@ export function Form(props) {
               </div>
             </div>
           </div>
-
         </div>
 
         

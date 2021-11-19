@@ -28,7 +28,7 @@ namespace ClaroTechTest1.Controllers {
       return Ok(r);
     }
 
-    //api/v1/prod/entities/Product
+    //api/v1/prod/process/saveFeature
     [Route("process/saveFeature")]
     public IActionResult saveFeature([FromBody] dynamic json){
       var feature = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
@@ -41,7 +41,24 @@ namespace ClaroTechTest1.Controllers {
           return Ok(cfr);
         }
         transaction.Commit();
-        return Ok(r.SetSuccess("Caracteristica registrada.").SetData(cfr));
+        return Ok(r.SetSuccess("Característica registrada.").SetData(cfr));
+      }
+    }
+
+    //api/v1/prod/process/saveMerchandise
+    [Route("process/saveMerchandise")]
+    public IActionResult saveMerchandise([FromBody] dynamic json){
+      var merchandise = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+      Return r = new Return();
+      using (var transaction = this._db.Database.BeginTransaction()){
+        
+        var cfr = this._ps.CreateMerchandise(merchandise);
+        if(cfr?.Error?.Message != null){
+          transaction.Rollback();
+          return Ok(cfr);
+        }
+        transaction.Commit();
+        return Ok(r.SetSuccess("Característica registrada.").SetData(cfr));
       }
     }
   }

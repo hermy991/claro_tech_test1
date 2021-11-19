@@ -7,7 +7,7 @@ export class Menu extends React.Component {
       <aside className="menu is-info">
         <p className="menu-label"> Módulo de Producto </p>
         <ul className="menu-list">
-          <li><Link to="page-prod-create-feature">Registro de Caracteristicas</Link></li>
+          <li><Link to="page-prod-create-feature">Registro de Características</Link></li>
           <li><Link to="page-prod-create-merchandise">Registro de Mercancia</Link></li>
           <li><Link to="page-prod-create-product">Registro de Producto</Link></li>
         </ul>

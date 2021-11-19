@@ -6,29 +6,26 @@ const options = {
   },
 }
 
-export async function getInventories(){
+async function post(path, body){
   let toptions = JSON.parse(JSON.stringify(options));
   body = body || {};
   toptions.body = JSON.stringify(body);
-  const r = await fetch(`${pathBase}/entities/Inventory`, toptions);
+  const r = await fetch(`${pathBase}${path}`, toptions);
   const json = await r.json();
+  return json;
+}
+
+export async function getInventories(){
+  const json = await post(`/entities/Inventory`, body);
   return json;
 }
 
 export async function getInventoryStatus(){
-  let toptions = JSON.parse(JSON.stringify(options));
-  body = body || {};
-  toptions.body = JSON.stringify(body);
-  const r = await fetch(`${pathBase}/entities/InventoryStatus`, toptions);
-  const json = await r.json();
+  const json = await post(`/entities/InventoryStatus`, body);
   return json;
 }
 
 export async function getWarehouse(){
-  let toptions = JSON.parse(JSON.stringify(options));
-  body = body || {};
-  toptions.body = JSON.stringify(body);
-  const r = await fetch(`${pathBase}/entities/Warehouses`, toptions);
-  const json = await r.json();
+  const json = await post(`/entities/Warehouses`, body);
   return json;
 }
