@@ -1,5 +1,6 @@
 @import 'bulma/css/bulma.min.css';
 @import 'font-awesome/css/font-awesome.min.css';
+@import 'github-markdown-css/github-markdown.css';
 
 body {
   margin: 0;
