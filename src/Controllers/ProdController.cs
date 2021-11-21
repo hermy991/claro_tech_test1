@@ -30,6 +30,31 @@ namespace ClaroTechTest1.Controllers {
       return Ok(r);
     }
 
+    //api/v1/prod/functions/getProducts
+    [Route("functions/getProducts")]
+    public IActionResult getProducts([FromBody] dynamic json){
+      var filter = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+      var r = this._ps.GetProducts(this._db, filter);
+      return Ok(r);
+    }
+
+    //api/v1/prod/functions/getFeatureDetails
+    [Route("functions/getFeatureDetails")]
+    public IActionResult getFeatureDetails([FromBody] dynamic json){
+      var filter = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+      filter["Feature_ID"] = ((JArray)filter["Feature_ID"]).ToObject<int[]>();
+      var r = this._gs.GetEntity(ControllerName, "FeatureDetail", filter);
+      return Ok(r);
+    }
+
+    //api/v1/prod/functions/getProductFeatures
+    [Route("functions/getProductFeatures")]
+    public IActionResult getProductFeatures([FromBody] dynamic json){
+      var filter = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+      var r = this._ps.GetProductFeatures(this._db, filter);
+      return Ok(r);
+    }
+
     //api/v1/prod/process/saveFeature
     [Route("process/saveFeature")]
     public IActionResult saveFeature([FromBody] dynamic json){
@@ -82,5 +107,37 @@ namespace ClaroTechTest1.Controllers {
         return Ok(r.SetSuccess("Característica registrada.").SetData(cfr));
       }
     }
+
+    //api/v1/prod/process/saveProduct
+    [Route("process/saveProduct")]
+    public IActionResult saveProduct([FromBody] dynamic json){
+      var product = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+      product["ProductFeatures"] = ((JArray)product["ProductFeatures"])
+          .Select(jv => 
+              new ProductFeature { 
+                Merchandise_ID = jv.Value<int>("Merchandise_ID"), 
+                Feature_ID = jv.Value<int>("Feature_ID"), 
+                FeatureDetail_ID = jv.Value<int>("FeatureDetail_ID"), 
+                Active = true }).ToArray();
+      Return r = new Return();
+      using (var transaction = this._db.Database.BeginTransaction()){
+        
+        var cfr = this._ps.CreateProduct(this._db, product);
+        if(cfr?.Error?.Message != null){
+          transaction.Rollback();
+          return Ok(cfr);
+        }
+        product["Product_ID"] = cfr.Data.Product_ID;
+        var sbr = this._ps.SetProductFeatures(this._db, product["Product_ID"], product["ProductFeatures"]);
+        if(sbr?.Error?.Message != null){
+          transaction.Rollback();
+          return Ok(sbr);
+        }
+        transaction.Commit();
+        return Ok(r.SetSuccess("Producto registrada.").SetData(cfr));
+      }
+    }
+
+
   }
 }

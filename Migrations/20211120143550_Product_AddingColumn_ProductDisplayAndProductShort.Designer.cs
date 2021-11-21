@@ -4,14 +4,16 @@ using ClaroTechTest1.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClaroTechTest1.Migrations
 {
     [DbContext(typeof(XorDbContext))]
-    partial class XorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211120143550_Product_AddingColumn_ProductDisplayAndProductShort")]
+    partial class Product_AddingColumn_ProductDisplayAndProductShort
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

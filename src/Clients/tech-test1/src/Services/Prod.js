@@ -1,3 +1,5 @@
+import * as glob from "./Glob";
+
 const pathBase = "api/v1/prod"
 const options = { 
   method: 'POST', 
@@ -22,6 +24,9 @@ export async function getFeatures(body){
 
 export async function getFeatureDetails(body){
   const json = await post(`/entities/FeatureDetail`, body);
+  if(json.data){
+    json.data = glob.toPascal(json.data);
+  }
   return json;
 }
 
@@ -42,6 +47,30 @@ export async function getProducts(body){
 
 export async function getProductFeatures(body){
   const json = await post(`/entities/ProductFeature`, body);
+  return json;
+}
+
+export async function fgetProducts(body){
+  const json = await post(`/functions/getProducts`, body);
+  if(json.data){
+    json.data = glob.toPascal(json.data);
+  }
+  return json;
+}
+
+export async function fgetProductFeatures(body){
+  const json = await post(`/functions/getProductFeatures`, body);
+  if(json.data){
+    json.data = glob.toPascal(json.data);
+  }
+  return json;
+}
+
+export async function fgetFeatureDetails(body){
+  if(body.Feature_ID && !Array.isArray(body.Feature_ID)){
+    body.Feature_ID = [body.Feature_ID];
+  }
+  const json = await post(`/functions/getFeatureDetails`, body);
   return json;
 }
 

@@ -1,18 +1,19 @@
 // import logo from './logo.svg';
 import './App.css';
 /** Components */
-import { NavBar } from './Components/NavBar'
+import { Navbar } from './Components/Navbar'
 import { Menu } from './Components/Menu';
 /** Pages */
 import { PageHome, PageAbout, PageDocumentation, PageWork, PageContact, PageReportAIssue, PageProdCreateFeature, PageProdCreateMerchandise, PageProdCreateProduct, PageInvCreateInventory, PageInvInquiryProductStock } from './Pages/Pages';
 import { BrowserRouter, Routes, Route} from "react-router-dom";
 
 function App() {
+  document.body.classList.add('has-navbar-fixed-top');
   return (
     <BrowserRouter>
       <div>
         <div className="app-header">
-          <NavBar></NavBar>
+          <Navbar></Navbar>
         </div>
         <div className="app-body">
           <div className="app-menu">

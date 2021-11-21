@@ -25,31 +25,45 @@ namespace ClaroTechTest1.Internal {
       }
       return QueryFormat(query, tps);
     }
-    public string QueryFormat(string query, Dictionary<string, object> ps){
-      var tempQuery = query;
-      foreach(var k in ps.Keys){
+
+    public string ValueToSql(object v) {
         string tempv;
-        if(ps[k] == null)
+        if(v == null)
           tempv = "(NULL)";
-        else if(ps[k] is int)
-          tempv = ps[k]+"";
-        else if(ps[k] is bool)
-          tempv = (bool)ps[k]? "'1'" : "'0'";
-        else if (ps[k] is DateTime)
-          tempv = "(STR_TO_DATE('"+((DateTime)ps[k]).ToString("yyyy-MM-dd HH:mm:ss")+"','%Y-%m-%d %H:%i:%S'))";
-        else if (ps[k] is string && new Regex("[0-9]{4}-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]").IsMatch(ps[k]+""))
-          tempv = "(STR_TO_DATE('"+ ps[k] +"','%Y-%m-%d %H:%i:%S'))";
+        else if(v is int)
+          tempv = v+"";
+        else if(v is bool)
+          tempv = (bool)v? "'1'" : "'0'";
+        else if (v is DateTime)
+          tempv = "(STR_TO_DATE('"+((DateTime)v).ToString("yyyy-MM-dd HH:mm:ss")+"','%Y-%m-%d %H:%i:%S'))";
+        else if (v is string && new Regex("[0-9]{4}-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]").IsMatch(v+""))
+          tempv = "(STR_TO_DATE('"+ v +"','%Y-%m-%d %H:%i:%S'))";
         /// LENTITUD UTILIZANDO LIKE POR ESTA RAZON SE COMENTO ESTA PARTE
         /// using datetime LIKE '2009-10-20%' => 2931ms
         /// using datetime >= '2009-10-20 00:00:00' AND datetime <= '2009-10-20 23:59:59' => 168ms
-        // else if (ps[k] is string && new Regex("[0-9]{4}-[0-1][0-9]-[0-3][0-9]").IsMatch(ps[k]+""))
-        //   tempv = "'"+ps[k]+"%'";
-        else if (ps[k] is JsonElement && ((JsonElement) ps[k]).ValueKind == JsonValueKind.True)
+        // else if (v is string && new Regex("[0-9]{4}-[0-1][0-9]-[0-3][0-9]").IsMatch(v+""))
+        //   tempv = "'"+v+"%'";
+        else if (v is JsonElement && ((JsonElement) v).ValueKind == JsonValueKind.True)
           tempv = "'1'";
-        else if (ps[k] is JsonElement && ((JsonElement) ps[k]).ValueKind == JsonValueKind.False)
+        else if (v is JsonElement && ((JsonElement) v).ValueKind == JsonValueKind.False)
           tempv = "'0'";
+        else if (v.GetType().IsArray){
+          tempv = "";
+          for(int i = 0; i < ((Array)v).Length; i++){
+            object _ = ((Array)v).GetValue(i);
+            tempv += ValueToSql(_);
+            if(i < ((Array)v).Length - 1)
+              tempv += ", ";
+          }
+        }
         else
-          tempv = $"'{Regex.Replace(ps[k]+"", "'", "''")}'";
+          tempv = $"'{Regex.Replace(v+"", "'", "''")}'";
+        return tempv;
+    }
+    public string QueryFormat(string query, Dictionary<string, object> ps){
+      var tempQuery = query;
+      foreach(var k in ps.Keys){
+        string tempv = ValueToSql(ps[k]);
         var tempk = Regex.Replace(k, "[@:]", "");
         tempQuery = Regex.Replace(tempQuery, $":{tempk}|@{tempk}", tempv);
       }
@@ -85,7 +99,12 @@ namespace ClaroTechTest1.Internal {
         foreach(string key in filter.Keys){
           string temp = ":" + key;
           temp = QueryFormat(temp, new Dictionary<string, object>{{key, filter[key]}});
-          whereClause.Add($"{key} = {temp}");
+          if(filter[key].GetType().IsArray && ((Array)filter[key]).Length == 0){
+          }
+          if(filter[key].GetType().IsArray)
+            whereClause.Add($"{key} IN ({temp})");
+          else 
+            whereClause.Add($"{key} = {temp}");
         }
       }
       return ( useWhere ? "\n WHERE " : "\n AND " ) + string.Join(" AND ", whereClause);

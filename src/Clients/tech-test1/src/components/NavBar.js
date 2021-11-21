@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export class NavBar extends React.Component {
+export class Navbar extends React.Component {
   render() {
-    return (<nav className="navbar is-info" role="navigation" aria-label="main navigation">
+    return (<nav className="navbar is-info is-fixed-top" role="navigation" aria-label="main navigation">
     <div className="navbar-brand">
       <Link className="navbar-item" to="/">
         <img src="/hermy-logo.png" alt="Hermy logo" width="112" height="28"></img>
